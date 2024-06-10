@@ -3,4 +3,4 @@
     email = jacobryanfinley@gmail.com
     username = jacob-r-Finley
 [remote "origin"]
-    url = https://github.com/jacob-r-finley/UNO_DCFL_Scanner.git
+    url = ssh://git@github.com:jacob-r-finley/UNO_DCFL_Scanner.git
