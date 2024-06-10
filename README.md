@@ -37,3 +37,4 @@ python main.py
 - The program runs on an infinite loop from wherever you call ```python main.py```. 
 - The current program reads specific table data from the Daily Crime & Fire Log, so if you would like to use this code for a different project, edit the ```ReadPage.py``` file so that you grab the data that you would like. 
 - BeautifulSoup is used as the webscrapper from the Crime & Fire Log page. The data is grabbed from a table and other packages (like pandas) to grab the data. I may also update to this in the future to more reliably read data.
+- If you plan to use this double check the code to make sure that none of my current code and added text is not added to your tweets.
