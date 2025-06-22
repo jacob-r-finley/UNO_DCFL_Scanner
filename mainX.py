@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
+import time
+from datetime import datetime
 from ReadPage import Reader
 from UploadTweet import Tweeter
 from Logger import Logger
-import time
-from datetime import datetime
 from FormatDate import formatDate as FD
 
 SLEEP_TIME = 5*60 # 5 minutes

@@ -2,21 +2,20 @@ import datetime
 
 class formatDate:
     def __init__(self):
-        '''Object that returns formatted version of today's date
+        '''
+        Object that returns formatted version of today's date
         '''
         self.date = self.getDate()
                 
     def getDate(self) -> dict:
-        '''Grabs a dict that can be spliced for individual date data
-
+        '''
+        Grabs a dict that can be spliced for individual date data
         Returns:
-            dict: of form
-            
-            day - DD
-            
-            month - [name of month]
-            
-            year - YYYY
+            {
+                day - DD
+                month - MMM
+                year - YYYY
+            }
         '''
         months = {
             1: 'January',
@@ -39,6 +38,7 @@ class formatDate:
         }
 
     def prettyPrint(self) -> str:
-        '''returns a pretty string version of the current date
+        '''
+        returns a pretty string version of the current date
         '''
         return f'{self.date['day']}/{self.date['month']}/{self.date['year']}'
