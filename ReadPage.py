@@ -7,16 +7,6 @@ class Reader:
     This is the Reader class that will read the UNO Police Reports page
     and return the data from today's log.
     It will use BeautifulSoup to parse the HTML and extract the relevant information.
-    It will return a dictionary with the following keys:
-    - offense: the offense reported
-    - report: the report number
-    - disposition: the disposition of the case
-    - occurred: the date and time the offense occurred
-    - building: the building where the offense occurred
-    - location: the location of the offense
-    - stolen: the value of stolen property
-    - damaged: the value of damaged property
-    - desc: a description of the offense
     '''
     def __init__(self, link: str, l: Logger):
         '''
@@ -59,11 +49,13 @@ class Reader:
             return False
         i = str(self.logger.findNumberOfLogs())
         try:
-            offense = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label5').string
             reported = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label2').string
-            disp = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label3').string
-            occ = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_OccurredDateRange').string
+            offense = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label5').string
+            if not offense:
+                offense = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_IncidentCode').string
             build = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label8').string
+            if not build:
+                build = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_BuildingDescription').string
             loc = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Location').string
             stolen = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label12').string
             damage = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label13').string
@@ -72,10 +64,8 @@ class Reader:
             return False
         else:
             return {
-                'offense': offense,
                 'report': reported,
-                'disposition': disp,
-                'occurred': occ,
+                'offense': offense,
                 'building': build,
                 'location': loc,
                 'stolen': stolen,

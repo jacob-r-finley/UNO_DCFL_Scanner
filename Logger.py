@@ -47,6 +47,20 @@ class Logger:
         except:
             return False
 
+    def clearFile(self) -> None | bool:
+        '''
+        Clears the log file
+        Returns:
+            None  - if successful
+            False - if unsuccessful
+        '''
+        try:
+            with open(self.file, 'w') as file:
+                file.write('')
+            return None
+        except:
+            return False
+
     def findNumberOfLogs(self) -> int | bool:
         '''
         Finds the number of logs in the log file for today
