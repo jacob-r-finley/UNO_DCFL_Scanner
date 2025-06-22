@@ -6,7 +6,7 @@ class formatDate:
         Object that returns formatted version of today's date
         '''
         self.date = self.getDate()
-                
+
     def getDate(self) -> dict:
         '''
         Grabs a dict that can be spliced for individual date data

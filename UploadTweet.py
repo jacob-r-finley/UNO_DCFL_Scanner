@@ -24,21 +24,25 @@ class Tweeter:
         self.data = data
         self.grabData()
 
-    def grabData(self) -> None:
+    def grabData(self) -> None | bool:
         '''
         Grabs the keys from the keys.json file and sets them as class variables
         Raises:
             FileNotFoundError: if the keys.json file is not found
             KeyError: if any of the keys are not found in the JSON file
         '''
-        jsonFile = open('keys.json')
-        jsonData = json.load(jsonFile)
-        self.__consumerKey = jsonData.get('consumerKey')
-        self.__consumerSecret = jsonData.get('consumerSecret')
-        self.__accessToken = jsonData.get('accessToken')
-        self.__accessTokenSecret = jsonData.get('accessTokenSecret')
-        self.__bearerToken = jsonData.get('bearerToken')
-        jsonFile.close()
+        try:
+            jsonFile = open('keys.json')
+            jsonData = json.load(jsonFile)
+            self.__consumerKey = jsonData.get('consumerKey')
+            self.__consumerSecret = jsonData.get('consumerSecret')
+            self.__accessToken = jsonData.get('accessToken')
+            self.__accessTokenSecret = jsonData.get('accessTokenSecret')
+            self.__bearerToken = jsonData.get('bearerToken')
+        except:
+            return False
+        finally:
+            jsonFile.close()
 
     def tweet(self) -> None:
         '''

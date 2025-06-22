@@ -47,9 +47,7 @@ def main():
             DEBUG and print('ERROR: Something went wrong')
         else:
             DEBUG and print('Happy ending')
-        for i in range(int(SLEEP_TIME)):
-            time.sleep(SLEEP_TIME)
-            DEBUG and print(f'We slept #{i}')
+        time.sleep(SLEEP_TIME)
 
 
 if __name__ == '__main__':
