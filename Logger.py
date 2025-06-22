@@ -30,7 +30,7 @@ class Logger:
         except:
             return False
 
-    def clearBlankLines(self) -> None | bool:
+    def clearBlankLines(self) -> bool:
         '''
         Clears all blank lines from the log file
         Returns:
@@ -44,10 +44,11 @@ class Logger:
                 for line in lines:
                     if not line.isspace():
                         file.write(line)
+            return True
         except:
             return False
 
-    def clearFile(self) -> None | bool:
+    def clearFile(self) -> bool:
         '''
         Clears the log file
         Returns:
@@ -57,7 +58,7 @@ class Logger:
         try:
             with open(self.file, 'w') as file:
                 file.write('')
-            return None
+            return True
         except:
             return False
 
