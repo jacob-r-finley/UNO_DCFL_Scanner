@@ -69,7 +69,6 @@ def testing():
         DEBUG and print('No data found for testing')
         b = f'\nF Date: {dater.prettyPrint()}\n\tTime: {str(datetime.now())[11:]}\n\tStatus: {r.request.status_code}\n\tNothing to update C&F log\n'
         logger.add(b)
-        pass
     else:
         DEBUG and print('Data found for testing')
         b = f'\nS Date: {dater.prettyPrint()}\n\tTime: {str(datetime.now())[11:]}\n\tStatus: {r.request.status_code}\n\tSuccessful GET Request\n'
