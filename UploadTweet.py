@@ -4,7 +4,18 @@ import json
 TWEET_LIMIT = 280
 
 class Tweeter:
+    '''
+    This class is responsible for tweeting the data from the UNO Police Reports page.
+    It will use the Tweepy library to interact with the Twitter API.
+    It will read the keys from a JSON file and use them to authenticate with the Twitter API
+    and then tweet the data.
+    '''
     def __init__(self, data: dict | str):
+        '''
+        Tweeter object designed to tweet the data from the UNO Police Reports page
+        Args:
+            data (dict | str): the data to tweet
+        '''
         self.__consumerKey = None
         self.__consumerSecret = None
         self.__accessToken = None
@@ -13,7 +24,13 @@ class Tweeter:
         self.data = data
         self.grabData()
 
-    def grabData(self):
+    def grabData(self) -> None:
+        '''
+        Grabs the keys from the keys.json file and sets them as class variables
+        Raises:
+            FileNotFoundError: if the keys.json file is not found
+            KeyError: if any of the keys are not found in the JSON file
+        '''
         jsonFile = open('keys.json')
         jsonData = json.load(jsonFile)
         self.__consumerKey = jsonData.get('consumerKey')
@@ -24,6 +41,11 @@ class Tweeter:
         jsonFile.close()
 
     def tweet(self) -> None:
+        '''
+        Tweets the data from the UNO Police Reports page
+        Raises:
+            tweepy.TweepyException: if there is an error with the Twitter API
+        '''
         writtenData = self.parseData()
         client = tweepy.Client(
             consumer_key=self.__consumerKey,
@@ -37,6 +59,11 @@ class Tweeter:
         )
 
     def parseData(self) -> str:
+        '''
+        Parses the data from the UNO Police Reports page and formats it for tweeting
+        Returns:
+            str: the formatted data ready for tweeting
+        '''
         builder = ''
         tags = ['#KnowTheO', '#MavSpirit', '#NUforNE']
         for key in self.data.keys():
