@@ -1,5 +1,4 @@
 keys.json
-Tweeted_logs.txt
-UNODCL_log.txt
+*.txt
 testing
 /__pycache__/*

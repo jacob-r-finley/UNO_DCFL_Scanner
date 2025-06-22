@@ -78,14 +78,14 @@ class Tweeter:
                     builder += f'{self.data[key]}'
                 case 'building':
                     loc = self.data['location'][0:self.data['location'].find('(')]
-                    if self.data['building'] == 'N/A' and len(loc) == 0:
+                    if self.data[key] == 'N/A' and len(loc) == 0:
                         builder += ' at No listed location\n'
-                    elif self.data['building'] != 'N/A' and len(loc) > 0:
-                        builder += f' at {self.data['building']} on {loc}\n'
-                    elif self.data['building'] == 'N/A':
+                    elif self.data[key] != 'N/A' and len(loc) > 0:
+                        builder += f' at {self.data[key]} on {loc}\n'
+                    elif self.data[key] == 'N/A':
                         builder += f' at {loc}\n'
                     else:
-                        builder += f' at {self.data['building']}\n'
+                        builder += f' at {self.data[key]}\n'
                 case 'stolen':
                     if self.data[key] == '$0.00':
                         continue
