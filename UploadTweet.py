@@ -10,7 +10,7 @@ class Tweeter:
     It will read the keys from a JSON file and use them to authenticate with the Twitter API
     and then tweet the data.
     '''
-    def __init__(self, data: dict | str):
+    def __init__(self, data: dict):
         '''
         Tweeter object designed to tweet the data from the UNO Police Reports page
         Args:
@@ -24,7 +24,7 @@ class Tweeter:
         self.data = data
         self.grabData()
 
-    def grabData(self) -> None | bool:
+    def grabData(self) -> bool:
         '''
         Grabs the keys from the keys.json file and sets them as class variables
         Raises:
@@ -71,36 +71,35 @@ class Tweeter:
         builder = ''
         tags = ['#KnowTheO', '#MavSpirit', '#NUforNE']
         for key in self.data.keys():
-            match key:
-                case 'offense':
-                    builder += f'{self.data[key]}\n'
-                case 'report':
-                    builder += f'{self.data[key]}'
-                case 'building':
-                    loc = self.data['location'][0:self.data['location'].find('(')]
-                    if self.data['building'] == 'N/A' and len(loc) == 0:
-                        builder += ' at No listed location\n'
-                    elif self.data['building'] != 'N/A' and len(loc) > 0:
-                        builder += f' at {self.data["building"]} on {loc}\n'
-                    elif self.data['building'] == 'N/A':
-                        builder += f' at {loc}\n'
-                    else:
-                        builder += f' at {self.data["building"]}\n'
-                case 'stolen':
-                    if self.data[key] == '$0.00':
-                        continue
-                    else:
-                        builder += f'Stolen: {self.data[key]}\n'
-                case 'damaged':
-                    if self.data[key] == '$0.00':
-                        continue
-                    else:
-                        builder += f'Damaged: {self.data[key]}\n'
-                case 'desc':
-                    if self.data[key] is None:
-                        builder += 'No further details provided\n'
-                    else:
-                        builder += f'{self.data[key]}\n'     
+            if key == 'offense':
+                builder += f'{self.data[key]}\n'
+            elif key == 'report':
+                builder += f'{self.data[key]}'
+            elif key == 'building':
+                loc = self.data['location'][0:self.data['location'].find('(')]
+                if self.data['building'] == 'N/A' and len(loc) == 0:
+                    builder += ' at No listed location\n'
+                elif self.data['building'] != 'N/A' and len(loc) > 0:
+                    builder += f' at {self.data["building"]} on {loc}\n'
+                elif self.data['building'] == 'N/A':
+                    builder += f' at {loc}\n'
+                else:
+                    builder += f' at {self.data["building"]}\n'
+            elif key == 'stolen':
+                if self.data[key] == '$0.00':
+                    continue
+                else:
+                    builder += f'Stolen: {self.data[key]}\n'
+            elif key == 'damaged':
+                if self.data[key] == '$0.00':
+                    continue
+                else:
+                    builder += f'Damaged: {self.data[key]}\n'
+            elif key == 'desc':
+                if self.data[key] is None:
+                    builder += 'No further details provided\n'
+                else:
+                    builder += f'{self.data[key]}\n'     
         for tag in tags:
             if len(f'{builder + tag}') <= TWEET_LIMIT:
                 builder += f'{tag} '

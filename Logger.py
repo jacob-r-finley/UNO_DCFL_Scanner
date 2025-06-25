@@ -30,7 +30,7 @@ class Logger:
         except:
             return False
 
-    def clearBlankLines(self) -> None | bool:
+    def clearBlankLines(self) -> bool:
         '''
         Clears all blank lines from the log file
         Returns:
@@ -47,7 +47,7 @@ class Logger:
         except:
             return False
 
-    def findNumberOfLogs(self) -> int | bool:
+    def findNumberOfLogs(self) -> int:
         '''
         Finds the number of logs in the log file for today
         Returns:

@@ -30,7 +30,7 @@ class Reader:
         self.soup = BeautifulSoup(self.request.content, 'html.parser')
         self.logger = l
 
-    def testLink(self) -> bool | requests.Response:
+    def testLink(self) -> requests.Response:
         '''tests the link for UNOCDL
         Raises:
             ValueError: will return an error if webpage was unaccessible 
@@ -48,7 +48,7 @@ class Reader:
         else:
             return r
 
-    def readPage(self) -> bool | dict:
+    def readPage(self) -> dict:
         '''
         Reads the UNODCL and will splice the data accordingly
         Returns:
