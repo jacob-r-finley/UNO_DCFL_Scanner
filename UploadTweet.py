@@ -81,11 +81,11 @@ class Tweeter:
                     if self.data['building'] == 'N/A' and len(loc) == 0:
                         builder += ' at No listed location\n'
                     elif self.data['building'] != 'N/A' and len(loc) > 0:
-                        builder += f' at {self.data['building']} on {loc}\n'
+                        builder += f' at {self.data["building"]} on {loc}\n'
                     elif self.data['building'] == 'N/A':
                         builder += f' at {loc}\n'
                     else:
-                        builder += f' at {self.data['building']}\n'
+                        builder += f' at {self.data["building"]}\n'
                 case 'stolen':
                     if self.data[key] == '$0.00':
                         continue
