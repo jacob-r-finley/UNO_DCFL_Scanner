@@ -41,4 +41,4 @@ class formatDate:
         '''
         returns a pretty string version of the current date
         '''
-        return f'{self.date['day']}/{self.date['month']}/{self.date['year']}'
+        return f'{self.date["day"]}/{self.date["month"]}/{self.date["year"]}'

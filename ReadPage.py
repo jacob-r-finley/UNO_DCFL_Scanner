@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from Logger import Logger
+from DBManager import DBManager as DBM
+from time import sleep
 
 class Reader:
     '''
@@ -15,12 +17,20 @@ class Reader:
             link (str): the http link for the UNODCL
             l (Logger): the Logger object to log the results
         '''
-        self.link = link
-        self.request = self.testLink()
-        self.soup = BeautifulSoup(self.request.content, 'html.parser')
-        self.logger = l
+        try:
+            self.link = link
+            self.request = self.testLink()
+            if not self.request.content:
+                raise ValueError('Webpage was unaccessible')
+            self.soup = BeautifulSoup(self.request.content, 'html.parser')
+            self.logger = l
+            self.counter = 0
+            self.dbm = DBM('Test_UNODCL.db')
+        except ValueError as err:
+            print('Error:', err)
+            return err
 
-    def testLink(self) -> bool | requests.Response:
+    def testLink(self) -> requests.Response:
         '''tests the link for UNOCDL
         Raises:
             ValueError: will return an error if webpage was unaccessible 
@@ -31,14 +41,27 @@ class Reader:
         try:
             r = requests.get(self.link)
             status = r.status_code
+
+            # status 429 means that there are too many requests to the page and we need to wait.
+            # we will try this 10 times and then give up
+            if status == 429 and 'retry-after' in r.headers._store and self.counter < 10:
+                # print('trying after '+ str(r.headers._store['retry-after'][1]) + ' seconds')
+                retry_after = int(r.headers._store['retry-after'][1])
+                # self.logger.add(f'Rate limit exceeded. Retrying after {retry_after} seconds.')
+                sleep(retry_after)
+                self.counter += 1
+                self.testLink()
+            if status == 429 and 'retry-after' in r.headers._store:
+                self.counter = 0
+                raise TimeoutError
             if not(199 < status < 300):
                     raise ValueError
-        except ValueError:
-            return False
+        except ValueError or TimeoutError as err:
+            return err
         else:
             return r
 
-    def readPage(self) -> bool | dict:
+    def readUNOPage(self) -> dict:
         '''
         Reads the UNODCL and will splice the data accordingly
         Returns:
@@ -47,28 +70,28 @@ class Reader:
         '''
         if not(self.link):
             return False
-        i = str(self.logger.findNumberOfLogs())
+        i = str(len(self.dbm.fetch_today_tweets())).zfill(2)
         try:
-            reported = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label2').string
-            offense = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label5').string
+            reported = self.soup.select_one(f'span[id$="ctl{i}_Label2"]')
+            offense = self.soup.select_one(f'span[id$="ctl{i}_Label5"]')
             if not offense:
-                offense = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_IncidentCode').string
-            build = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label8').string
+                offense = self.soup.select_one(f'span[id$="ctl{i}_IncidentCode"]')
+            build = self.soup.select_one(f'span[id$="ctl{i}_Label8"]')
             if not build:
-                build = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_BuildingDescription').string
-            loc = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Location').string
-            stolen = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label12').string
-            damage = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label13').string
-            desc = self.soup.find('span', id=f'ctl00_ContentPlaceHolder1_ResultList2_ctl{i.zfill(2)}_Label14').string
-        except AttributeError:
-            return False
-        else:
+                build = self.soup.select_one(f'span[id$="ctl{i}_BuildingDescription"]')
+            loc = self.soup.select_one(f'span[id$="ctl{i}_Location"]')
+            stolen = self.soup.select_one(f'span[id$="ctl{i}_Label12"]')
+            damage = self.soup.select_one(f'span[id$="ctl{i}_Label13"]')
+            desc = self.soup.select_one(f'span[id$="ctl{i}_Label14"]')
+
             return {
-                'report': reported,
-                'offense': offense,
-                'building': build,
-                'location': loc,
-                'stolen': stolen,
-                'damaged': damage,
-                'desc': desc
+                'report': reported.string,
+                'offense': offense.string,
+                'building': build.string,
+                'location': loc.string,
+                'stolen': stolen.string,
+                'damaged': damage.string,
+                'desc': desc.string
             }
+        except AttributeError as err:
+            return err

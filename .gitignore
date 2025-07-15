@@ -1,4 +1,5 @@
 keys.json
 *.txt
+*.db
 testing
 /__pycache__/*

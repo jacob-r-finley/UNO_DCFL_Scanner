@@ -86,7 +86,7 @@ class Logger:
         except:
             return False
 
-    def findNumberOfLogs(self) -> int | bool:
+    def findNumberOfLogs(self) -> int:
         '''
         Finds the number of logs in the log file for today
         Returns:

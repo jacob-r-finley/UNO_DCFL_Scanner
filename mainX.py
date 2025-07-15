@@ -11,6 +11,7 @@ SLEEP_TIME = 5*60 # 5 minutes
 UNO_URL = 'https://scsapps.unl.edu/UNO-PoliceReports/MainPage.aspx'
 TWEETED_LOG = 'Tweeted_logs.txt'
 UNODCL_LOG = 'UNODCL_log.txt'
+UNO_DB = 'UNODCL'
 
 '''
 This is the main file that will run the program. It will read the UNO Police Reports page, log the data, and tweet it out.
@@ -24,7 +25,7 @@ def main():
             logger_tweeted = Logger(TWEETED_LOG)
             r = Reader(UNO_URL, logger)
             DEBUG and print('Reading page')
-            data = r.readPage()
+            data = r.readUNOPage()
             dater = FD()
             if not data:
                 DEBUG and print('No data found')
@@ -63,7 +64,9 @@ def testing():
     logger_tweeted.clearFile()
     DEBUG and print('Reading page for testing')
     r = Reader(UNO_URL, logger)
-    data = r.readPage()
+    DEBUG and print('Set up database connection and tweeter')
+    data = r.readUNOPage()
+    twit = Tweeter(data)
     dater = FD()
     if not data:
         DEBUG and print('No data found for testing')
@@ -76,6 +79,7 @@ def testing():
         logger.add(b)
         logger_tweeted.add(b_tweeted)
         print(data)
+        twit.tweet({ 'status': 'testing' })
         logger.add('\n\tTweet created')
     print('We logged results')
 
@@ -90,7 +94,7 @@ def setupGlobals():
     parser.add_argument('--testing', action='store_true', help="Run the program in testing mode.")
     parser.add_argument('--debug', action='store_true', help="Enable debug mode.")
     args = parser.parse_args()
-    DEBUG = args.debug
+    DEBUG = args.debug or args.testing
     TESTING = args.testing
 
 if __name__ == '__main__':
